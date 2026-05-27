@@ -1,20 +1,23 @@
-// Copyright 2022 NNTU-CS
-#ifndef INCLUDE_TRAIN_H_
-#define INCLUDE_TRAIN_H_
-
-class Train {
- private:
-  struct Car {
-    bool light; // состояние лампочки
-    Car *next;
-    Car *prev;
-  };
-  int countOp; // счетчик шагов (число переходов из вагона в вагон)
-  Car *first; // точка входа в поезд (первый вагон)
- public:
-  Train();
-  void addCar(bool light); // добавить вагон с начальным состоянием лампочки
-  int getLength();          // вычислить длину поезда
-  int getOpCount();         // вернуть число переходов (из вагона в вагон)
+#ifndef TRAIN_H
+#define TRAIN_H
+class Locomotive {
+private:
+    struct Wagon {
+        bool light;   // состояние лампочки
+        Wagon* next;
+        Wagon* prev;
+    };
+    int steps;        // счётчик переходов между вагонами
+    Wagon* head;      // первый вагон (точка входа)
+    Wagon* current;   // текущий вагон
+    void resetSteps() { steps = 0; }
+    void forward();   // переход вперёд с увеличением счётчика
+    void backward();  // переход назад с увеличением счётчика
+public:
+    Locomotive();
+    ~Locomotive();
+    void appendWagon(bool light);    // добавить вагон
+    int measureLength();             // вычислить длину состава
+    int getSteps() const;            // получить число переходов
 };
-#endif  // INCLUDE_TRAIN_H_
+#endif
