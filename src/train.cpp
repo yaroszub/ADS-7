@@ -1,67 +1,77 @@
 #include "train.h"
-Locomotive::Locomotive() : steps(0), head(nullptr), current(nullptr) {}
-Locomotive::~Locomotive() {
+
+Train::Train() : operations(0), head(nullptr), now(nullptr) {}
+
+Train::~Train() {
     if (!head) return;
-    Wagon* wagon = head->next;
-    while (wagon != head) {
-        Wagon* nextWagon = wagon->next;
-        delete wagon;
-        wagon = nextWagon;
+    Car* temp = head->next;
+    while (temp != head) {
+        Car* toDelete = temp;
+        temp = temp->next;
+        delete toDelete;
     }
     delete head;
 }
-void Locomotive::appendWagon(bool light) {
-    Wagon* newWagon = new Wagon{light, nullptr, nullptr};
+
+void Train::addCar(bool light) {
+    Car* newCar = new Car{light, nullptr, nullptr};
     if (!head) {
-        head = newWagon;
+        head = newCar;
         head->next = head;
         head->prev = head;
-        current = head;
+        now = head;
     } else {
-        Wagon* last = head->prev;
-        last->next = newWagon;
-        newWagon->prev = last;
-        newWagon->next = head;
-        head->prev = newWagon;
+        Car* tail = head->prev;
+        tail->next = newCar;
+        newCar->prev = tail;
+        newCar->next = head;
+        head->prev = newCar;
     }
 }
-void Locomotive::forward() {
-    current = current->next;
-    steps++;
+
+void Train::moveForward() {
+    now = now->next;
+    ++operations;
 }
-void Locomotive::backward() {
-    current = current->prev;
-    steps++;
+
+void Train::moveBackward() {
+    now = now->prev;
+    ++operations;
 }
-int Locomotive::measureLength() {
+
+int Train::getLength() {
     if (!head) return 0;
-    resetSteps();
-    current = head;
-    if (!current->light) {
-        current->light = true;
-    }
+    resetCounter();
+    now = head;
+
+    // если лампочка выключена – включаем
+    if (!now->light) now->light = true;
+
     int length = 0;
-    bool found = false;
-    while (!found) {
+    bool finished = false;
+
+    while (!finished) {
+        // идём вперёд до первого горящего вагона
         while (true) {
-            forward();
-            length++;
-            if (current->light) {
-                current->light = false;
+            moveForward();
+            ++length;
+            if (now->light) {
+                now->light = false;   // гасим
                 break;
             }
         }
-        for (int i = 0; i < length; i++) {
-            backward();
-        }
-        if (!current->light) {
-            found = true;
-        } else {
-            length = 0;
-        }
+
+        // возвращаемся назад на length шагов
+        for (int i = 0; i < length; ++i) moveBackward();
+
+        // если лампочка погашена – мы у начала
+        if (!now->light) finished = true;
+        else length = 0;   // иначе начинаем заново
     }
+
     return length;
 }
-int Locomotive::getSteps() const {
-    return steps;
+
+int Train::getOpCount() const {
+    return operations;
 }
