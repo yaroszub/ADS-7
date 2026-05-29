@@ -1,47 +1,47 @@
+#include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <iostream>
 #include "train.h"
 
 int main() {
     std::srand(static_cast<unsigned int>(time(nullptr)));
 
-    std::cout << "n\tfalse\t\ttrue\t\trndom\n";
+    std::cout << "n\tfalse\t\ttrue\t\trandom\n";
 
-    for (int n = 2; n <= 100; n++) {
-        int stepsFalse, stepsTrue, stepsRandom;
+    for (int n = 2; n <= 100; ++n) {
+        int opFalse, opTrue, opRandom;
 
         // Все лампочки выключены
         {
-            Locomotive train;
-            for (int i = 0; i < n; i++)
-                train.appendWagon(false);
-            train.measureLength();
-            stepsFalse = train.getSteps();
+            Train train;
+            for (int i = 0; i < n; ++i)
+                train.addCar(false);
+            train.getLength();
+            opFalse = train.getOpCount();
         }
 
         // Все лампочки включены
         {
-            Locomotive train;
-            for (int i = 0; i < n; i++)
-                train.appendWagon(true);
-            train.measureLength();
-            stepsTrue = train.getSteps();
+            Train train;
+            for (int i = 0; i < n; ++i)
+                train.addCar(true);
+            train.getLength();
+            opTrue = train.getOpCount();
         }
 
         // Случайные состояния
         {
-            Locomotive train;
-            for (int i = 0; i < n; i++)
-                train.appendWagon(std::rand() % 2);
-            train.measureLength();
-            stepsRandom = train.getSteps();
+            Train train;
+            for (int i = 0; i < n; ++i)
+                train.addCar(std::rand() % 2);
+            train.getLength();
+            opRandom = train.getOpCount();
         }
 
         std::cout << n << "\t"
-                  << stepsFalse << "\t\t"
-                  << stepsTrue << "\t\t"
-                  << stepsRandom << "\n";
+                  << opFalse << "\t\t"
+                  << opTrue << "\t\t"
+                  << opRandom << "\n";
     }
 
     return 0;
