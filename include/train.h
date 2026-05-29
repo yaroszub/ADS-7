@@ -9,13 +9,13 @@ private:
         Car* prev;
     };
 
-    int operations;   // счётчик переходов (раньше countOp)
+    int operations;   // счётчик переходов
     Car* head;        // первый вагон
-    Car* now;         // текущий вагон (раньше current)
+    Car* now;         // текущий вагон
 
     void resetCounter() { operations = 0; }
-    void moveForward();   // переход вперёд + счётчик
-    void moveBackward();  // переход назад + счётчик
+    void moveForward();
+    void moveBackward();
 
 public:
     Train();
