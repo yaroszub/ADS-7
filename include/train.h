@@ -3,7 +3,7 @@
 #define INCLUDE_TRAIN_H_
 
 class Train {
-private: 
+ private:
     struct Car {
         bool light;
         Car* next;
@@ -18,7 +18,7 @@ private:
     void moveForward();
     void moveBackward();
 
-public: 
+ public:
     Train();
     ~Train();
     void addCar(bool light);
